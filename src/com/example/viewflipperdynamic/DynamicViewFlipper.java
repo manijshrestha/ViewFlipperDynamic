@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -35,20 +36,23 @@ public class DynamicViewFlipper extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_flipper);
 		mTextView = (TextView) findViewById(R.id.title);
-		mViewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
 		mNextButton = (Button) findViewById(R.id.nextBtn);
+		mViewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
 
 		mNextButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				ImageView image = new ImageView(getApplicationContext());
-				UrlImageViewHelper.setUrlDrawable(image, getNextImage());
+				UrlImageViewHelper.setUrlDrawable(image, getNextImage(), R.drawable.loading);
 				mTextView.setText("Showing: " + index);
 				mViewFlipper.addView(image);
 				mViewFlipper.showNext();
 			}
 		});
+		
+		mViewFlipper.setInAnimation(AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.slide_in_left));
+		mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.slide_out_right));
 	}
 
 	protected String getNextImage() {

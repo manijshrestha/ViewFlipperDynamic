@@ -10,6 +10,7 @@ import android.view.View.OnClickListener;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -38,16 +39,21 @@ public class DynamicViewFlipper extends Activity {
 		mTextView = (TextView) findViewById(R.id.title);
 		mNextButton = (Button) findViewById(R.id.nextBtn);
 		mViewFlipper = (ViewFlipper) findViewById(R.id.viewFlipper);
+		
+		ImageView startImage = getNewImageView();
+		startImage.setImageResource(R.drawable.unknown);
+		mViewFlipper.addView(startImage);
 
 		mNextButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				ImageView image = new ImageView(getApplicationContext());
+				ImageView image = getNewImageView();
 				UrlImageViewHelper.setUrlDrawable(image, getNextImage(), R.drawable.loading);
-				mTextView.setText("Showing: " + index);
+				mTextView.setText("Showing: " + index + "# of View in flipper " + mViewFlipper.getChildCount());
 				mViewFlipper.addView(image);
 				mViewFlipper.showNext();
+				mViewFlipper.removeViewAt(0);
 			}
 		});
 		
@@ -55,6 +61,12 @@ public class DynamicViewFlipper extends Activity {
 		mViewFlipper.setOutAnimation(AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.slide_out_right));
 	}
 
+	protected ImageView getNewImageView() {
+		ImageView image = new ImageView(getApplicationContext());
+		image.setScaleType(ScaleType.CENTER_INSIDE);
+		return image;
+	}
+	
 	protected String getNextImage() {
 		if (index == imageURLs.size())
 			index = 0;
